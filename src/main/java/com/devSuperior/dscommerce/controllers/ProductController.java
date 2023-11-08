@@ -2,6 +2,7 @@ package com.devSuperior.dscommerce.controllers;
 
 import com.devSuperior.dscommerce.dto.CustomError;
 import com.devSuperior.dscommerce.dto.ProductDTO;
+import com.devSuperior.dscommerce.dto.ProductMinDTO;
 import com.devSuperior.dscommerce.entities.Product;
 import com.devSuperior.dscommerce.repositories.ProductRepository;
 import com.devSuperior.dscommerce.services.ProductService;
@@ -33,9 +34,9 @@ public class ProductController {
        }
 
     @GetMapping
-    public ResponseEntity <Page <ProductDTO>> findAll
+    public ResponseEntity <Page <ProductMinDTO>> findAll
             (@RequestParam(name="name", defaultValue = " ") String name, Pageable pageable){
-        Page <ProductDTO> dto= service.findAll(name, pageable);
+        Page<ProductMinDTO> dto= service.findAll(name, pageable);
         return ResponseEntity.ok(dto);
     }
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
