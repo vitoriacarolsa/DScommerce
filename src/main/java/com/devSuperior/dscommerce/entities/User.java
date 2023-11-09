@@ -23,14 +23,15 @@ public class User implements UserDetails {
 	private LocalDate birthDate;
 	private String password;
 
-	@OneToMany (mappedBy = "client")
-	private List <Order> orders =new ArrayList<>();
+	@OneToMany(mappedBy = "client")
+	private List<Order> orders = new ArrayList<>();
 	@ManyToMany
 	@JoinTable(name = "tb_user_role",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
-	public User(){
+
+	public User() {
 	}
 
 	public User(Long id, String name, String email, String phone, LocalDate birthDate, String password) {
@@ -82,6 +83,14 @@ public class User implements UserDetails {
 		this.birthDate = birthDate;
 	}
 
+	public boolean hasRole(String roleName) {
+		for (Role role : roles) {
+			if (role.getAuthority().equals(roleName)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return roles;
@@ -130,14 +139,6 @@ public class User implements UserDetails {
 
 	public void addRole(Role role) {
 		roles.add(role);
-	}
-	public boolean hasRole(String roleName) {
-		for (Role role : roles) {
-			if (role.getAuthority().equals(roleName)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override
