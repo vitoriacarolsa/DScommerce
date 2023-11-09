@@ -39,7 +39,7 @@ public class UserService implements UserDetailsService {
 		}
 		return user;
 	}
-	protected User authenticated() {
+	public User authenticated() {
 		try {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			Jwt jwtPrincipal = (Jwt) authentication.getPrincipal();
