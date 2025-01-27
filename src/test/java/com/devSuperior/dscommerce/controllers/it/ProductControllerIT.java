@@ -222,5 +222,63 @@ public class ProductControllerIT {
         result.andExpect(status().isUnauthorized());
     }
 
+    @Test
+    public void deleteShouldReturnNoContentWhenIdExistsAndAdminLogged() throws Exception {
+
+        ResultActions result =
+                mockMvc.perform(delete("/products/{id}", existingId)
+                        .header("Authorization", "Bearer " + adminToken)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteShouldReturnNotFoundWhenIdDoesNotExistAndAdminLogged() throws Exception {
+
+        ResultActions result =
+                mockMvc.perform(delete("/products/{id}", nonExistingId)
+                        .header("Authorization", "Bearer " + adminToken)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void deleteShouldReturnBadRequestWhenIdIsDependentAndAdminLogged() throws Exception {
+
+        ResultActions result =
+                mockMvc.perform(delete("/products/{id}", dependentId)
+                        .header("Authorization", "Bearer " + adminToken)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void deleteShouldReturnForbiddenWhenIdExistsAndClientLogged() throws Exception {
+
+        ResultActions result =
+                mockMvc.perform(delete("/products/{id}", existingId)
+                        .header("Authorization", "Bearer " + clientToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void deleteShouldReturnUnauthorizedWhenIdExistsAndInvalidToken() throws Exception {
+
+        ResultActions result =
+                mockMvc.perform(delete("/products/{id}", existingId)
+                        .header("Authorization", "Bearer " + invalidToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isUnauthorized());
+    }
+
 
 }
